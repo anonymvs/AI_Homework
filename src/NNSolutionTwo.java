@@ -80,9 +80,9 @@ public class NNSolutionTwo {
 				}
 				if(i >= 1) {
 					ArrayList<Neuron> prevLayer = new ArrayList<>();
-					int fix = inLayerNeuronCount.get(i-1);
-					for(int k = 0; k < inLayerNeuronCount.get(i-1); k++) {
-						prevLayer.add(neuronList.get(cnt- fix + k));
+					int prevLayerCnt = inLayerNeuronCount.get(i-1);
+					for(int k = 0; k < prevLayerCnt; k++) {
+						prevLayer.add(neuronList.get(cnt- prevLayerCnt + k - j));
 					}
 					neuronList.get(cnt).setPrevList(prevLayer);
 					neuronList.get(cnt).setLayerid(i);
@@ -99,11 +99,18 @@ public class NNSolutionTwo {
 			}
 			inputlist.add(input);
 		}
+		for(int i = 0; i < inputlist.size(); i++) {
+			System.out.println(inputlist.get(i));
+		}
 		ArrayList<Double> output = new ArrayList<>();
 		for(int i = 0; i < inputlist.size(); i++) {
+			System.out.println();
 			neuronList.get(0).init_input(inputlist.get(i).get(0));
 			neuronList.get(1).init_input(inputlist.get(i).get(1));
-			output.add(run(neuronList.get(neuronList.size()-1)));
+			output.add(neuronList.get(neuronList.size()-1).getOutput());
+			for(int j = 0; j < neuronList.size(); j++) {
+				neuronList.get(j).reset();
+			}
 		}
 		System.out.println("output: ---------------------------");
 		for(int i = 0; i < output.size(); i++) {
@@ -116,9 +123,5 @@ public class NNSolutionTwo {
 		}
 		*/
 		
-	}
-
-	public static double run(Neuron outputNeuron) {
-		return outputNeuron.getOutput();
 	}
 }

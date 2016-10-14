@@ -14,11 +14,14 @@ public class OutputNeuron extends Neuron {
 		double temp = sum + this.input.get(input.size()-1);
 		if(temp > 0) {
 			output = temp;
+			System.out.println("result: " + output);
 			return output;
 		} else {
 			output = 0;
+			System.out.println("result: 0 mivel aktivációs fos");
 			return output;
 		}
+
 	}
 
 	@Override

@@ -28,6 +28,10 @@ public abstract class Neuron {
 		return this.output;
 	}
 
+	public void reset() {
+		this.output = -1;
+	}
+
 	public abstract double generateOutput();
 
 	public abstract void init_input(double input);

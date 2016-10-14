@@ -7,23 +7,21 @@ public class InputNeuron extends Neuron{
 		this.layerid = 0;
 		System.out.println("InputNeuron");
 	}
-	
-	public void setInput(double arg) {
-		this.start_input = arg;
-	}
 
 	@Override
 	public double generateOutput() {
-		if(start_input != -1)
+		if(start_input != -1) {
+			System.out.println("One input neuron's output: " + output);
 			return output;
-		else
-			return -1;
+		}
+		return -1	;
 	}
 
 	@Override
 	public void init_input(double input) {
 		start_input = input;
 		this.output = start_input;
+		System.out.println("Initialization of a Input neuron");
 	}
 
 	public double getOutput() {
