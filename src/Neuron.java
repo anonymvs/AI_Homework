@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-public class Neuron {
-	public ArrayList<Neuron> nrl = new ArrayList<Neuron>();
-	public double output;
+public abstract class Neuron {
+	public ArrayList<Neuron> prevLayer = new ArrayList<>();
+	public double output = -1;
 	protected int layerid;
 	protected ArrayList<Double> input;
 	
@@ -13,4 +13,22 @@ public class Neuron {
 		}
 		System.out.println();
 	}
+
+	public void setLayerid(int id) {
+		layerid = id;
+		System.out.println(layerid);
+	}
+
+	public void setPrevList(ArrayList<Neuron> arg) {
+		prevLayer = arg;
+	}
+
+	public double getOutput() {
+		if(output == -1) return this.generateOutput();
+		return this.output;
+	}
+
+	public abstract double generateOutput();
+
+	public abstract void init_input(double input);
 }
