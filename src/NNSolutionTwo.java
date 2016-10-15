@@ -47,7 +47,6 @@ public class NNSolutionTwo {
 		for (int i = 1; i < inLayerNeuronCount.size(); i++) {
 			otherNeuronCnt += inLayerNeuronCount.get(i);
 		}
-		int neuronCount = inputNeuronCnt + otherNeuronCnt;
 		
 		ArrayList<Neuron> neuronList = new ArrayList<Neuron>();
 		for(int i = 0; i < inputNeuronCnt; i++) {
@@ -69,7 +68,7 @@ public class NNSolutionTwo {
 			for(int j = 0; j < strl.length; j++) {
 				temp.add(Double.parseDouble(strl[j]));
 			}
-			neuronList.get(i+2).setInput(temp);
+			neuronList.get(i+inputNeuronCnt).setInput(temp);
 		}
 		int cnt = 0;
 		for(int i = 0; i < inLayerNeuronCount.size(); i++) {
@@ -99,22 +98,36 @@ public class NNSolutionTwo {
 			}
 			inputlist.add(input);
 		}
+		/*
 		for(int i = 0; i < inputlist.size(); i++) {
 			System.out.println(inputlist.get(i));
 		}
+		*/
 		ArrayList<Double> output = new ArrayList<>();
 		for(int i = 0; i < inputlist.size(); i++) {
-			System.out.println();
-			neuronList.get(0).init_input(inputlist.get(i).get(0));
-			neuronList.get(1).init_input(inputlist.get(i).get(1));
-			output.add(neuronList.get(neuronList.size()-1).getOutput());
+			//System.out.println();
+			for(int a = 0; a < inputNeuronCnt; a++) {
+				neuronList.get(a).init_input(inputlist.get(i).get(a));
+			}
+			//neuronList.get(1).init_input(inputlist.get(i).get(1));
+			for(int c = 0; c < inLayerNeuronCount.get(inLayerNeuronCount.size()-1); c++) {
+				output.add(neuronList.get(neuronList.size()- 1 - c).getOutput());
+			}
+
 			for(int j = 0; j < neuronList.size(); j++) {
 				neuronList.get(j).reset();
 			}
 		}
-		System.out.println("output: ---------------------------");
-		for(int i = 0; i < output.size(); i++) {
-			System.out.println(output.get(i));
+		System.out.println(Integer.parseInt(inputstr.get(otherNeuronCnt + 1)[0]));
+		for(int i = 0; i < output.size(); i+= inLayerNeuronCount.get(inLayerNeuronCount.size()-1)) {
+			for(int j = 0; j < inLayerNeuronCount.get(inLayerNeuronCount.size()-1); j++) {
+				int k = inLayerNeuronCount.get(inLayerNeuronCount.size()-1) - j - 1;
+				if(j == inLayerNeuronCount.get(inLayerNeuronCount.size()-1)-1 )
+					System.out.print(output.get(i+k));
+				else
+					System.out.print(output.get(i+k) + ",");
+			}
+			System.out.println();
 		}
 
 		/*

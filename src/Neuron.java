@@ -8,15 +8,18 @@ public abstract class Neuron {
 	
 	public void setInput(ArrayList<Double> arg) {
 		input = arg;
+		/*
 		for(int i = 0; i < input.size(); i++) {
 			System.out.print(input.get(i));
 		}
 		System.out.println();
+		*/
+
 	}
 
 	public void setLayerid(int id) {
 		layerid = id;
-		System.out.println(layerid);
+		//System.out.println(layerid);
 	}
 
 	public void setPrevList(ArrayList<Neuron> arg) {
