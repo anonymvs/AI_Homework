@@ -109,7 +109,6 @@ public class NNSolutionTwo {
 			for(int a = 0; a < inputNeuronCnt; a++) {
 				neuronList.get(a).init_input(inputlist.get(i).get(a));
 			}
-			//neuronList.get(1).init_input(inputlist.get(i).get(1));
 			for(int c = 0; c < inLayerNeuronCount.get(inLayerNeuronCount.size()-1); c++) {
 				output.add(neuronList.get(neuronList.size()- 1 - c).getOutput());
 			}

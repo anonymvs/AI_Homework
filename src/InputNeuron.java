@@ -18,6 +18,16 @@ public class InputNeuron extends Neuron{
 	}
 
 	@Override
+	public double generateDelta() {
+		return 0;
+	}
+
+	@Override
+	public void deriveNeuronAttrib() {
+		return;
+	}
+
+	@Override
 	public void init_input(double input) {
 		start_input = input;
 		this.output = start_input;
