@@ -65,7 +65,7 @@ public class NNSolutionThree {
             }
             neuronList.get(i+inputNeuronCnt).setInput(temp);
         }
-        //Sets up the neurons attribute about the previous layer
+        //Sets up the neurons attribute about the previous layer, and for the next one too
         int cnt = 0;
         for(int i = 0; i < inLayerNeuronCount.size(); i++) {
             for(int j = 0; j < inLayerNeuronCount.get(i); j++) {
@@ -73,7 +73,7 @@ public class NNSolutionThree {
                     ArrayList<Neuron> nextLayer = new ArrayList<>();
                     int nextLayerCnt = inLayerNeuronCount.get(i+1);
                     for(int m = 0; m < nextLayerCnt; m++) {
-                        nextLayer.add(neuronList.get(inLayerNeuronCount.get(i) + m));
+                        nextLayer.add(neuronList.get(cnt + inLayerNeuronCount.get(i) - j + m));
                     }
                     neuronList.get(cnt).setNextList(nextLayer);
                 }
@@ -85,7 +85,7 @@ public class NNSolutionThree {
                     ArrayList<Neuron> prevLayer = new ArrayList<>();
                     int prevLayerCnt = inLayerNeuronCount.get(i-1);
                     for(int k = 0; k < prevLayerCnt; k++) {
-                        prevLayer.add(neuronList.get(cnt- prevLayerCnt + k - j));
+                        prevLayer.add(neuronList.get(cnt - prevLayerCnt + k - j));
                     }
                     neuronList.get(cnt).setPrevList(prevLayer);
                     neuronList.get(cnt).setLayerid(i);
@@ -103,6 +103,18 @@ public class NNSolutionThree {
             }
             inputlist.add(input);
         }
+
+        for(int i = 0; i < inputlist.size(); i++) {
+            //System.out.println();
+            for(int a = 0; a < inputNeuronCnt; a++) {
+                neuronList.get(a).init_input(inputlist.get(i).get(a));
+            }
+
+            for(int c = 0; c < inLayerNeuronCount.get(inLayerNeuronCount.size()-1); c++) {
+                neuronList.get(neuronList.size()- 1 - c).getOutput();
+            }
+        }
+
         //Derives the stuff I need, and inside generates other stuff I need fot the stuff mentioned before
         for (int i = inputNeuronCnt; i < neuronList.size(); i++) {
             neuronList.get(i).deriveNeuronAttrib();

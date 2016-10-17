@@ -28,6 +28,11 @@ public class InputNeuron extends Neuron{
 	}
 
 	@Override
+	public void updateNeuronAttrib(double mu, double expectedResult) {
+		return;
+	}
+
+	@Override
 	public void init_input(double input) {
 		start_input = input;
 		this.output = start_input;
@@ -35,7 +40,7 @@ public class InputNeuron extends Neuron{
 	}
 
 	public double getOutput() {
-		return generateOutput();
+		return output;
 	}
 
 

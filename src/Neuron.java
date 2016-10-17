@@ -8,7 +8,7 @@ public abstract class Neuron {
 	protected int layerid;
 	protected int inLayerNumber;
 	protected ArrayList<Double> input;
-	protected double delta = -1;
+	public double delta = -1;
 	
 	public void setInput(ArrayList<Double> arg) {
 		input = arg;
@@ -50,6 +50,7 @@ public abstract class Neuron {
 
 	public void reset() {
 		this.output = -1;
+		this.delta = -1;
 	}
 	
 	public void resetall() {
@@ -63,6 +64,7 @@ public abstract class Neuron {
 	public abstract double generateDelta();
 
 	public abstract void deriveNeuronAttrib();
+	public abstract void updateNeuronAttrib(double mu, double expectedResult);
 
 	public abstract void init_input(double input);
 }
