@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,36 +170,100 @@ public class NNSolutionFour {
                 for(int a = 0; a < arch.get(0); a++) {
                     neurons.get(a).init_input(inputTemplates.get(i).get(a));
                 }
-                System.out.println(i + ". Tanítási bemenet: " + inputTemplates.get(i));
+
+                //System.out.println(i + ". Tanítási bemenet: " + inputTemplates.get(i));
+
+                for(int d = 0; d < arch.get(arch.size()-1); d++) {
+                    neurons.get(neurons.size() - arch.get(arch.size()-1) + d).setDelta(
+                            inputTemplates.get(i).get(inputTemplates.get(i).size() - arch.get(arch.size()-1) + d)
+                                    -
+                            neurons.get(neurons.size() - arch.get(arch.size()-1) + d).getOutput());
+                    for(int t = arch.get(0); t < neurons.size(); t++) {
+                        neurons.get(t).resetOutput();
+                    }
+                }
+
                 for(int c = 0; c < arch.get(arch.size()-1); c++) {
                     double op = neurons.get(neurons.size()- 1 - c).getOutput();
-                    System.out.println("Tanítás előtti kimenet:" + op);
+                    //System.out.println("Tanítás előtti kimenet:" + op);
                 }
-                updateNeuronAttributes(neurons, arch, mu, inputTemplates.get(i).get(inputTemplates.get(i).size()-1));
+
+                List<ArrayList<Double>> derivedAttributes = new ArrayList<>();
+                derivedAttributes = gatherDerivedNeuronAttributes(neurons, arch, mu, inputTemplates.get(i).get(inputTemplates.get(i).size()-1));
+                updateNeuronAttributes(derivedAttributes, neurons, arch);
+
                 //System.out.println("Tanítás utáni kimenet: " + neurons.get(neurons.size()-1).getOutput());
-                double valami = (inputTemplates.get(i).get(2) - neurons.get(neurons.size()-1).getOutput()) * mu * 2;
-                System.out.println("Hiba*mu*2: " + valami);
-                System.out.println("Módosult hálózat:");
-                writeOutChangedArchitecture(neurons, arch);
-                System.out.println();
+                //double valami = (inputTemplates.get(i).get(2) - neurons.get(neurons.size()-1).getOutput()) * mu * 2;
+                //System.out.println("Hiba*mu*2: " + valami);
+                //System.out.println("Módosult hálózat:");
+                //writeOutChangedArchitecture(neurons, arch);
+                //System.out.println();
                 for(int z = 0; z < neurons.size(); z++) {
                     neurons.get(z).reset();
                 }
                 
             }
-            validateNeuronNetworkByTemplates(inputTemplates, neurons, arch);
+            double performance = validateNeuronNetworkByTemplates(inputTemplates, neurons, arch, St);
+            System.out.println(performance);
         }
+        for(int iterator = 0; iterator < arch.size()-1; iterator++) {
+            System.out.print(arch.get(iterator) + ",");
+        }
+        System.out.print(arch.get(arch.size()-1));
+        System.out.println();
+        writeOutChangedArchitecture(neurons, arch);
         //writeOutChangedArchitecture(neurons, arch);
     }
 
-    public static void updateNeuronAttributes(ArrayList<Neuron> neurons, ArrayList<Integer> arch, double mu, double expectedResult) {
-        for (int i = arch.get(0); i < neurons.size(); i++) {
-            neurons.get(i).updateNeuronAttrib(mu, expectedResult);
+    public static void updateNeuronAttributes(List<ArrayList<Double>> derivedAttributes, ArrayList<Neuron> neurons, ArrayList<Integer> arch) {
+        for(int i = 0; i < neurons.size() - arch.get(0); i++) {
+            neurons.get(i + arch.get(0)).setInput(derivedAttributes.get(i));
         }
     }
+
+    public static List<ArrayList<Double>> gatherDerivedNeuronAttributes(ArrayList<Neuron> neurons, ArrayList<Integer> arch, double mu, double expectedResult) {
+        List<ArrayList<Double>> ret = new ArrayList<>();
+        for (int i = arch.get(0); i < neurons.size(); i++) {
+            ret.add(neurons.get(i).updateNeuronAttrib(mu, expectedResult));
+        }
+        return ret;
+    }
     
-    public static void validateNeuronNetworkByTemplates(List<List<Double>> inputTemplates, ArrayList<Neuron> neurons, ArrayList<Integer> arch) {
-        
+    public static double validateNeuronNetworkByTemplates(List<List<Double>> inputTemplates, ArrayList<Neuron> neurons, ArrayList<Integer> arch, int St) {
+        ArrayList<Double> errorList = new ArrayList<>();
+        for(int i = St; i < inputTemplates.size(); i++) {
+            for (int a = 0; a < arch.get(0); a++) {
+                neurons.get(a).init_input(inputTemplates.get(i).get(a));
+            }
+            ArrayList<Double> outputDifferenceSquareList = new ArrayList<>();
+            ArrayList<Double> expRes = new ArrayList<>();
+            ArrayList<Double> oplist = new ArrayList<>();
+            for(int j = 0; j < arch.get(arch.size()-1); j++) {
+                expRes.add(inputTemplates.get(i).get(inputTemplates.get(i).size()-arch.get(arch.size()-1) + j));
+                oplist.add(neurons.get(neurons.size() - arch.get(arch.size()-1) + j).getOutput());
+                for(int d = arch.get(0); d < neurons.size(); d++) {
+                    neurons.get(d).reset();
+                }
+            }
+            for(int k = 0; k < expRes.size(); k++) {
+                outputDifferenceSquareList.add(Math.pow(expRes.get(k) - oplist.get(k), 2));
+            }
+            double avg = 0;
+            for (Double op :
+                    outputDifferenceSquareList) {
+                avg += op;
+            }
+            avg = avg / outputDifferenceSquareList.size();
+            errorList.add(avg);
+        }
+        //System.out.println(errorList);
+        double AVG = 0;
+        for (Double item :
+                errorList) {
+            AVG += item;
+        }
+        AVG = AVG / errorList.size();
+        return AVG;
     }
 
     public static void writeOutChangedArchitecture(ArrayList<Neuron> neurons, ArrayList<Integer> arch) {

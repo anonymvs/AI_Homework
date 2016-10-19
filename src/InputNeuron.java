@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 public class InputNeuron extends Neuron{
 	private double start_input = -1;
@@ -28,8 +29,8 @@ public class InputNeuron extends Neuron{
 	}
 
 	@Override
-	public void updateNeuronAttrib(double mu, double expectedResult) {
-		return;
+	public ArrayList<Double> updateNeuronAttrib(double mu, double expectedResult) {
+		return null;
 	}
 
 	@Override

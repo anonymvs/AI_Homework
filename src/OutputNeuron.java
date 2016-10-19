@@ -40,16 +40,16 @@ public class OutputNeuron extends Neuron {
 	}
 
 	@Override
-	public void updateNeuronAttrib(double mu, double expectedResult) {
-		double epsilon = (expectedResult - this.getOutput());
-		delta = epsilon;
+	public ArrayList<Double> updateNeuronAttrib(double mu, double expectedResult) {
+		ArrayList<Double> ret = new ArrayList<>();
 		for(int i = 0; i < input.size()-1; i++) {
 			double dw = input.get(i) + 2 * mu * delta * prevLayer.get(i).output;
-			input.set(i, dw);
+			ret.add(dw);
 		}
 		double db = input.get(input.size()-1) + 2 * mu * delta;
-		input.set(input.size()-1, db);
+		ret.add(db);
 		//System.out.println("HIDDENNEURON: weights + bias" + input);
+		return ret;
 	}
 
 

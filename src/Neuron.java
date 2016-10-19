@@ -46,25 +46,24 @@ public abstract class Neuron {
 		return delta;
 	}
 
-
+	public void setDelta(double d) {
+		delta = d;
+	}
 
 	public void reset() {
 		this.output = -1;
 		this.delta = -1;
 	}
-	
-	public void resetall() {
-		for (Neuron n :
-				neurons) {
-			n.reset();
-		}
+
+	public void resetOutput() {
+		this.output = -1;
 	}
 
 	public abstract double generateOutput();
 	public abstract double generateDelta();
 
 	public abstract void deriveNeuronAttrib();
-	public abstract void updateNeuronAttrib(double mu, double expectedResult);
+	public abstract ArrayList<Double> updateNeuronAttrib(double mu, double expectedResult);
 
 	public abstract void init_input(double input);
 }
